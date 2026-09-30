@@ -137,7 +137,7 @@ export default function App() {
   }
   async function togglePlay() {
     if(playing){ audio.current?.pause(); setPlaying(false); return; }
-    try { setError(''); await audio.current?.play(settings.countIn); setPlaying(true); } catch { setError('Audio could not start. Try pressing Play again in a browser that supports Web Audio.'); }
+    try { setError(''); const started=await audio.current?.play(settings.countIn); if(started)setPlaying(true); } catch { setError('Audio could not start. Try pressing Play again in a browser that supports Web Audio.'); }
   }
   function randomPick() {
     const id = bag.current.pick(filtered.map(p=>p.id),selectedId);

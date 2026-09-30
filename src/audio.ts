@@ -29,8 +29,8 @@ export class PracticeAudio {
     const token = ++this.runToken;
     this.ctx ??= new AudioContext();
     await this.ctx.resume();
-    if (token !== this.runToken) return;
-    if (this.timer !== null) return;
+    if (token !== this.runToken) return false;
+    if (this.timer !== null) return true;
     if (!this.cursor) {
       const config = this.getConfig();
       this.cursor = { config, beat: 0, loop: 0, count: countIn ? -config.meter : null };
@@ -48,6 +48,7 @@ export class PracticeAudio {
       this.animation = requestAnimationFrame(draw);
     };
     draw();
+    return true;
   }
   pause() {
     ++this.runToken;
