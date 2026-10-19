@@ -72,7 +72,7 @@ export default function App() {
   );
   const theory = THEORY_LESSONS[selected.id];
   const durations = makeDurations(selected, settings);
-  const chords = selected.roman.map((r) => chordFor(r, settings.key, settings.simplified));
+  const chords = selected.roman.map((r) => chordFor(r, settings.key));
   const total = durations.reduce((a, b) => a + b, 0);
   const active = step?.id === selected.id ? step.chord : 0;
   const beat = step?.id === selected.id ? step.beat : 0;
@@ -444,7 +444,9 @@ export default function App() {
                       <span className="chord-roman">
                         {chord.roman.replaceAll('b', '♭').replaceAll('#', '♯')}
                       </span>
-                      {settings.showDiagrams && <Fretboard chord={chord} />}
+                      {settings.showDiagrams && (
+                        <Fretboard chord={chord} mode={settings.voicingMode} />
+                      )}
                       {settings.showTheoryLabels && (
                         <div className="theory-tags">
                           {theory.focus
@@ -474,9 +476,7 @@ export default function App() {
                       <>
                         Coming next: <strong>{next.title}</strong>
                         <span>
-                          {next.roman
-                            .map((r) => chordFor(r, upcoming!.key, settings.simplified).name)
-                            .join(' → ')}
+                          {next.roman.map((r) => chordFor(r, upcoming!.key).name).join(' → ')}
                         </span>
                       </>
                     ) : (
@@ -492,7 +492,7 @@ export default function App() {
                 settings={settings}
                 challenge={challenge}
                 onChallengeChange={() => setChallenge((c) => !c)}
-                onSettingChange={(key, value) => update(key, value, key === 'simplified')}
+                onSettingChange={(key, value) => update(key, value)}
               />
 
               <RelatedTheory
@@ -500,7 +500,7 @@ export default function App() {
                 lesson={theory}
                 durations={durations}
                 meter={settings.meter}
-                simplified={settings.simplified}
+                voicingMode={settings.voicingMode}
                 rhythmChanged={settings.beats !== 'original'}
               />
               {error && (

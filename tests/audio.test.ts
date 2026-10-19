@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { PracticeAudio, type PlaybackConfig, type Step } from '../src/audio';
 import { progressions } from '../src/catalog';
+import { chordFor, voicingNotes } from '../src/music';
 
 test('audio transport schedules count-in, subdivisions, seamless loop changes, and pause/resume', async () => {
   let time = 0;
@@ -91,7 +92,7 @@ test('audio transport schedules count-in, subdivisions, seamless loop changes, a
     click: true,
     accompaniment: false,
     volume: 0.5,
-    simplified: false,
+    voicingMode: 'basic',
   };
   const steps: Step[] = [];
   const second = progressions[2];
@@ -209,6 +210,26 @@ test('audio transport schedules count-in, subdivisions, seamless loop changes, a
       [1200, 1200],
       'backbeat-only suppresses beats 1/3 and subdivision clicks',
     );
+    engine.reset();
+    frequencies.length = 0;
+    config = {
+      ...config,
+      click: false,
+      subdivision: false,
+      accompaniment: true,
+      voicingMode: 'triad',
+    };
+    await engine.play(false);
+    advance(0.2);
+    const expected = (mode: 'triad' | 'shell') =>
+      voicingNotes(chordFor(blues.roman[0], config.key), mode).map(
+        (n) => 440 * 2 ** ((n - 69) / 12),
+      );
+    assert.deepEqual(frequencies, expected('triad'), 'accompaniment sounds the diagram triad');
+    frequencies.length = 0;
+    config = { ...config, voicingMode: 'shell' };
+    advance(1.9);
+    assert.deepEqual(frequencies, expected('shell'), 'the next card uses a live shell-mode change');
   } finally {
     await engine.dispose();
     Object.assign(globalThis, previous);

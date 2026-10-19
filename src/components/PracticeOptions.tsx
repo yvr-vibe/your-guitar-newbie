@@ -1,7 +1,7 @@
 import type { Settings } from '../settings';
 import Toggle from './Toggle';
 
-type Option = 'countIn' | 'showDiagrams' | 'simplified' | 'showTheoryLabels';
+type Option = 'countIn' | 'showDiagrams' | 'showTheoryLabels';
 type Props = {
   settings: Pick<Settings, Option>;
   challenge: boolean;
@@ -32,12 +32,6 @@ export default function PracticeOptions({
         onChange={() => onSettingChange('showDiagrams', !settings.showDiagrams)}
       >
         Chord diagrams
-      </Toggle>
-      <Toggle
-        checked={!settings.simplified}
-        onChange={() => onSettingChange('simplified', !settings.simplified)}
-      >
-        Full voicings
       </Toggle>
       <Toggle
         checked={settings.showTheoryLabels}

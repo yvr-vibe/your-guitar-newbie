@@ -1,4 +1,4 @@
-import { chordFor, chordIndexAt, voicingNotes } from './music';
+import { chordFor, chordIndexAt, voicingNotes, type VoicingMode } from './music';
 import type { Progression } from './catalog';
 import { metronomeClick, resolveClickPattern, type ClickPattern } from './metronome';
 export type PlaybackConfig = {
@@ -13,7 +13,7 @@ export type PlaybackConfig = {
   click: boolean;
   accompaniment: boolean;
   volume: number;
-  simplified: boolean;
+  voicingMode: VoicingMode;
 };
 export type Step = {
   id: string;
@@ -117,7 +117,7 @@ export class PracticeAudio {
         volume: live.volume,
         subdivision: live.subdivision,
         swing: live.swing,
-        simplified: live.simplified,
+        voicingMode: live.voicingMode,
       };
       cursor.config = config;
       const total = config.durations.reduce((a, b) => a + b, 0);
@@ -180,9 +180,9 @@ export class PracticeAudio {
         const previous =
           cursor.beat === 0 ? -1 : chordIndexAt(config.durations, cursor.beat - unit);
         if (previous !== chord) {
-          const played = chordFor(config.progression.roman[chord], config.key, config.simplified);
+          const played = chordFor(config.progression.roman[chord], config.key);
           const duration = Math.min(config.durations[chord] * seconds * 0.9, 4);
-          voicingNotes(played).forEach((midi, index) =>
+          voicingNotes(played, config.voicingMode).forEach((midi, index) =>
             this.tone(
               440 * 2 ** ((midi - 69) / 12),
               this.nextTime + index * 0.009,

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ArrowUpRight, BookOpen, ChevronDown } from 'lucide-react';
+import type { VoicingMode } from '../music';
 import type { Progression } from '../catalog';
 import { THEORY_CONCEPTS, type TheoryLesson, theoryPosition, theoryReference } from '../theory';
 
@@ -8,7 +9,7 @@ type Props = {
   lesson: TheoryLesson;
   durations: number[];
   meter: number;
-  simplified: boolean;
+  voicingMode: VoicingMode;
   rhythmChanged: boolean;
 };
 
@@ -17,7 +18,7 @@ export default function RelatedTheory({
   lesson,
   durations,
   meter,
-  simplified,
+  voicingMode,
   rhythmChanged,
 }: Props) {
   const [expanded, setExpanded] = useState(true);
@@ -73,10 +74,11 @@ export default function RelatedTheory({
             rhythm settings.
           </p>
         )}
-        {simplified && (
+        {voicingMode !== 'basic' && (
           <p className="theory-context">
-            Full voicings is off, so some named extensions may be omitted from the chord shapes and
-            sound.
+            The selected voicing can omit tones from the named harmony. Chord names and these notes
+            describe the full progression; the Chord diagrams settings explain reductions and
+            fallbacks.
           </p>
         )}
         <details className="theory-glossary">

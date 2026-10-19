@@ -668,6 +668,13 @@ main {
   margin: 12px auto 0;
   overflow: visible;
 }
+.voicing-caption {
+  margin: 6px 0 0;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
 .fret {
   stroke: #d6d0c2;
   stroke-width: 1;
@@ -698,13 +705,6 @@ main {
 .fret-label {
   fill: #a49c8e;
   font-size: 10px;
-}
-.shape-label {
-  fill: #a49c8e;
-  font-size: 7px;
-}
-.current .shape-label {
-  fill: #ba876b;
 }
 .next-challenge {
   display: flex;
@@ -912,6 +912,31 @@ main {
 .rhythm-control {
   border-left: 1px solid var(--border);
   padding-left: 23px;
+}
+.diagram-settings {
+  grid-column: 1 / -1;
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+}
+.voicing-buttons {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background: #f2eee5;
+  border-radius: 6px;
+}
+.voicing-buttons button {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 2px;
+  font-size: 13px;
+  border-radius: 4px;
+  color: #938774;
+}
+.voicing-buttons button.active {
+  background: #fffefa;
+  color: #8a5c41;
+  box-shadow: 0 1px 3px #34251712;
 }
 .control-title {
   display: flex;

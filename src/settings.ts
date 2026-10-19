@@ -1,5 +1,5 @@
 import { progressions } from './catalog';
-import { KEYS } from './music';
+import { KEYS, VOICING_MODES, type VoicingMode } from './music';
 import { CLICK_PATTERNS, requiresFourBeatMeter, type ClickPattern } from './metronome';
 
 export type Settings = {
@@ -14,7 +14,7 @@ export type Settings = {
   accompaniment: boolean;
   volume: number;
   countIn: boolean;
-  simplified: boolean;
+  voicingMode: VoicingMode;
   showDiagrams: boolean;
   showTheoryLabels: boolean;
   loops: number;
@@ -32,7 +32,7 @@ export const DEFAULT_SETTINGS: Settings = {
   accompaniment: false,
   volume: 0.65,
   countIn: true,
-  simplified: false,
+  voicingMode: 'basic',
   showDiagrams: false,
   showTheoryLabels: true,
   loops: 2,
@@ -54,6 +54,11 @@ export function loadSaved(): { settings: Settings; favorites: string[]; selected
         : DEFAULT_SETTINGS.bpm,
       clickPattern: meter !== 4 && requiresFourBeatMeter(clickPattern) ? 'first' : clickPattern,
       meter,
+      voicingMode: VOICING_MODES.includes(saved.settings?.voicingMode)
+        ? saved.settings.voicingMode
+        : saved.settings?.simplified === true
+          ? 'triad'
+          : 'basic',
       beats: ['original', '1', '2', '4', '6', '8'].includes(raw.beats) ? raw.beats : 'original',
       loops: [1, 2, 4, 8].includes(raw.loops) ? raw.loops : 2,
       volume: Number.isFinite(raw.volume)
@@ -66,7 +71,6 @@ export function loadSaved(): { settings: Settings; favorites: string[]; selected
           'click',
           'accompaniment',
           'countIn',
-          'simplified',
           'showDiagrams',
           'showTheoryLabels',
           'randomKey',

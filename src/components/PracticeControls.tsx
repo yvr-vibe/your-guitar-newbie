@@ -3,6 +3,7 @@ import type { Genre } from '../catalog';
 import { requiresFourBeatMeter, resolveClickPattern, type ClickPattern } from '../metronome';
 import type { Settings, SettingsChange } from '../settings';
 import Toggle from './Toggle';
+import { VOICING_MODES } from '../music';
 
 type Props = {
   settings: Settings;
@@ -181,6 +182,32 @@ export default function PracticeControls({
             </button>
           </div>
         </div>
+        <section className="diagram-settings" aria-label="Chord diagram settings">
+          <h3 className="control-title">CHORD DIAGRAMS</h3>
+          <div className="voicing-buttons" role="group" aria-label="Voicing mode">
+            {VOICING_MODES.map((mode) => (
+              <button
+                key={mode}
+                aria-pressed={settings.voicingMode === mode}
+                className={settings.voicingMode === mode ? 'active' : ''}
+                onClick={() => onSettingChange('voicingMode', mode)}
+              >
+                {mode[0].toUpperCase() + mode.slice(1)}
+              </button>
+            ))}
+          </div>
+          <p className="metronome-hint">
+            {settings.voicingMode === 'basic'
+              ? 'Familiar open or movable shapes.'
+              : settings.voicingMode === 'triad'
+                ? 'Three-note shapes on the top three strings; 7ths and extensions omitted.'
+                : 'Root, 3rd and 7th (or 6th). Plain chords use a triad fallback.'}{' '}
+            Diagrams and accompaniment use the same voicing.
+          </p>
+          {!settings.showDiagrams && (
+            <p className="metronome-hint">Enable Chord diagrams in the player to see the shapes.</p>
+          )}
+        </section>
         <div className="sound-control">
           <div className="control-title">
             <span>SOUND</span>

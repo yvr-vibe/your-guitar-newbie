@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { DEFAULT_SETTINGS, loadSaved } from '../src/settings';
 
-test('saved accent patterns stay compatible with the restored meter', () => {
+test('saved settings validate beat accents and migrate voicing preferences', () => {
   const original = Object.getOwnPropertyDescriptor(globalThis, 'localStorage');
   let saved = '';
   Object.defineProperty(globalThis, 'localStorage', {
@@ -20,6 +20,14 @@ test('saved accent patterns stay compatible with the restored meter', () => {
     assert.equal(loadSaved().settings.clickPattern, 'auto');
     saved = JSON.stringify({ settings: { clickPattern: 'invalid' } });
     assert.equal(loadSaved().settings.clickPattern, DEFAULT_SETTINGS.clickPattern);
+    for (const voicingMode of ['basic', 'triad', 'shell']) {
+      saved = JSON.stringify({ settings: { voicingMode } });
+      assert.equal(loadSaved().settings.voicingMode, voicingMode);
+    }
+    saved = JSON.stringify({ settings: { simplified: true } });
+    assert.equal(loadSaved().settings.voicingMode, 'triad');
+    saved = JSON.stringify({ settings: { voicingMode: 'invalid' } });
+    assert.equal(loadSaved().settings.voicingMode, 'basic');
     saved = '{invalid';
     assert.deepEqual(loadSaved().settings, DEFAULT_SETTINGS);
   } finally {

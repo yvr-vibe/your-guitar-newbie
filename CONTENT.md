@@ -31,7 +31,7 @@ Source review: September 30, 2026. All practice tips and exercise names are orig
 
 ## Related theory and card annotations
 
-`src/theory.ts` contains original explanations for each of the 100 exercises. Labels refer to explicit card positions in the full arrangement, not to guesses made from the exercise title. Bar/beat locations are calculated from the active durations; when the rhythm is changed, the UI distinguishes these locations from the default-form explanation. Simplified voicings can omit the extensions discussed in the notes.
+`src/theory.ts` contains original explanations for each of the 100 exercises. Labels refer to explicit card positions in the full arrangement, not to guesses made from the exercise title. Bar/beat locations are calculated from the active durations; when the rhythm is changed, the UI distinguishes these locations from the default-form explanation. Triad and Shell modes can omit tones discussed in the notes; card captions identify the shape type, while the Chord diagrams settings and accessible diagram descriptions explain reductions and fallbacks.
 
 For example, the classic blues marks its final V7 as a turnaround, while the quick-change resolution marks IV7 in bar 2 and I7 in bar 11 without inventing a final V7. The extended jazz-blues turnaround uses half-bar positions rather than treating all fourteen cards as fourteen bars.
 

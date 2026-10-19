@@ -41,9 +41,9 @@ export default function AboutDialog({ onClose }: { onClose: () => void }) {
         numerals use major-scale degrees, so minor patterns explicitly show ♭III, ♭VI, and ♭VII.
       </p>
       <p>
-        Simple shapes removes most extensions; full voicings preserves the chord colors. Chord
-        accompaniment uses a soft synthesized tone. Your settings and favorites are saved in this
-        browser.
+        Choose Basic, Triad, or Shell after Rhythm. Chord symbols keep the full harmony; the mode
+        description explains omitted tones and fallback shapes. Accompaniment uses the selected
+        voicing with a soft synthesized tone. Your settings and favorites are saved in this browser.
       </p>
       <div className="about-links">
         <a

@@ -5,7 +5,7 @@ A static React + TypeScript guitar practice website, built for GitHub Pages.
 ## Features
 
 - 100 curated exercises: 20 each for pop, rock, blues, jazz, and neo-soul.
-- Key transposition, playable guitar diagrams, full or simplified voicings.
+- Key transposition, playable guitar diagrams, Basic, Triad, or Shell voicings shared by diagrams and accompaniment.
 - 40–240 BPM, tap tempo, 3/4 or 4/4, shared chord-duration controls and a chord-relative beat counter.
 - Web Audio scheduled metronome, selectable beat emphasis (including 2 & 4 backbeat and backbeat-only), eighth-note subdivision, swing, synthesized chord accompaniment, and count-in. Blues defaults to 2 & 4 emphasis through the genre-default setting.
 - Filtered random selector with repeat avoidance; adaptation challenges switch at loop boundaries with a one-bar preview and optional random keys.
@@ -58,9 +58,11 @@ Sources and editorial limitations are documented in [CONTENT.md](CONTENT.md). So
 - `src/theory.ts`: original explanations, explicit card annotations, glossary definitions, and reading links.
 - `src/catalog.ts`: original progression forms and editorial metadata.
 - `src/audio.ts` and `src/metronome.ts`: audio scheduling and meter-aware click patterns.
-- `src/music.ts`: harmony and guitar shapes.
+- `src/music.ts` and `src/compactVoicing.ts`: harmony, basic shapes, and compact triad/shell shapes.
 - `src/styles.css`: shared design tokens, component styles, then responsive rules. Switch dimensions and option typography are defined once.
 
 Run `pnpm format` to format the source and tests. Before publishing, run formatting checks, tests, and the production build. Keep updates local until the user explicitly requests a GitHub push.
 
 Fonts load from Google Fonts with local sans-serif fallbacks. All sounds are generated locally after the user starts playback. Background tabs automatically pause practice.
+
+Triad mode uses three distinct chord tones on the top three strings. Shell mode keeps a bass root with the third and seventh (or sixth); plain triads remain triads. Suspended and power chords retain their basic shapes with a Basic caption. The Chord diagrams settings explain omissions and fallback behavior. Chord symbols always retain the full harmony. Legacy simplified-mode preferences migrate to Triad.

@@ -1,3 +1,5 @@
+import { compactVoicing } from './compactVoicing';
+
 export const KEYS = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'Bb', 'B'];
 const LETTERS = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
 const NATURAL = [0, 2, 4, 5, 7, 9, 11];
@@ -41,7 +43,7 @@ export const INTERVALS: Record<string, number[]> = {
   sus4: [0, 5, 7],
   mMaj7: [0, 3, 7, 11],
 };
-export function chordFor(roman: string, key: string, simplified = false): Chord {
+export function chordFor(roman: string, key: string): Chord {
   const match = /^([b#]?)(VII|III|VI|IV|II|V|I|vii|iii|vi|iv|ii|v|i)(.*)$/.exec(roman);
   if (!match) throw new Error(`Invalid roman numeral: ${roman}`);
   const [, accidental, numeral, suffix] = match;
@@ -54,7 +56,7 @@ export function chordFor(roman: string, key: string, simplified = false): Chord 
   if (delta > 6) delta -= 12;
   const rootName = LETTERS[letterIndex] + (delta < 0 ? 'b'.repeat(-delta) : '#'.repeat(delta));
   const minor = numeral === numeral.toLowerCase();
-  let quality =
+  const quality =
     suffix === 'ø7'
       ? 'm7b5'
       : suffix === '°7'
@@ -65,12 +67,16 @@ export function chordFor(roman: string, key: string, simplified = false): Chord 
             ? `m${suffix}`
             : suffix;
   if (!INTERVALS[quality]) throw new Error(`Unsupported quality: ${quality}`);
-  // Keep essential diminished/half-diminished and suspended harmony in easy mode.
-  if (simplified && !['dim7', 'm7b5', 'sus2', 'sus4', '5'].includes(quality))
-    quality = minor ? 'm' : '';
   return { name: rootName + quality, root, quality, intervals: INTERVALS[quality], roman };
 }
-export type Voicing = { frets: (number | null)[]; start: number; label: string };
+export const VOICING_MODES = ['basic', 'triad', 'shell'] as const;
+export type VoicingMode = (typeof VOICING_MODES)[number];
+export type Voicing = {
+  frets: (number | null)[];
+  start: number;
+  label: string;
+  description?: string;
+};
 const OPEN: Record<string, (number | null)[]> = {
   C: [null, 3, 2, 0, 1, 0],
   D: [null, null, 0, 2, 3, 2],
@@ -100,7 +106,12 @@ const OPEN: Record<string, (number | null)[]> = {
   Dsus4: [null, null, 0, 2, 3, 3],
 };
 const TUNING = [40, 45, 50, 55, 59, 64];
-export function voicingFor(chord: Chord): Voicing {
+export function voicingFor(chord: Chord, mode: VoicingMode = 'basic'): Voicing {
+  if (mode !== 'basic') {
+    const compact = compactVoicing(chord, mode);
+    if (compact) return compact;
+    return { ...voicingFor(chord), description: 'Basic fallback · suspended/power chord' };
+  }
   const open = OPEN[chord.name];
   let frets: (number | null)[];
   if (open) frets = open;
@@ -142,8 +153,8 @@ export function voicingFor(chord: Chord): Voicing {
     label: open ? 'Open position' : 'Movable shape',
   };
 }
-export function voicingNotes(chord: Chord): number[] {
-  return voicingFor(chord).frets.flatMap((f, i) => (f === null ? [] : [TUNING[i] + f]));
+export function voicingNotes(chord: Chord, mode: VoicingMode = 'basic'): number[] {
+  return voicingFor(chord, mode).frets.flatMap((f, i) => (f === null ? [] : [TUNING[i] + f]));
 }
 export function chordIndexAt(durations: number[], beat: number): number {
   let cursor = 0;
