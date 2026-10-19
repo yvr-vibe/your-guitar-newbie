@@ -216,7 +216,7 @@ nav button {
   color: inherit;
   font-size: 13px;
 }
-.header-note {
+.header-support {
   margin-left: auto;
   font-size: 11px;
   color: #77776c;
@@ -224,11 +224,12 @@ nav button {
   gap: 8px;
   align-items: center;
 }
-.header-note > span {
-  width: 6px;
-  height: 6px;
-  background: #879280;
-  border-radius: 50%;
+.header-support > span {
+  font-size: 16px;
+  line-height: 1;
+}
+.header-support:hover {
+  color: var(--orange);
 }
 main {
   max-width: 1540px;
@@ -721,31 +722,177 @@ main {
   margin-left: 23px;
 }
 .practice-options {
-  display: grid;
-  gap: 12px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px 18px;
   padding: 14px 27px;
   border-top: 1px solid var(--border);
   background: #fdfcf8;
 }
-.practice-options-row {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px 24px;
+.practice-options > .toggle-label {
+  flex: 0 0 auto;
+  white-space: nowrap;
 }
-.loop-status {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  margin-left: auto;
-  color: #a39989;
-  font-size: var(--option-font-size);
-}
+
 .error-message {
   padding: 12px;
   color: #ad3c25;
   font-size: 14px;
   background: #ffece4;
+}
+
+/* Optional card annotations and their collapsible lesson. */
+.theory-tags {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-top: 10px;
+}
+.theory-tags:empty {
+  display: none;
+}
+.theory-tag {
+  max-width: 100%;
+  padding: 3px 6px;
+  border: 1px solid #e0dcce;
+  border-radius: 4px;
+  background: #efede4;
+  color: #79715e;
+  font-size: 11px;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+.theory-tag.resolution,
+.theory-tag.home {
+  background: #e8eee1;
+  border-color: #d6e0c9;
+  color: #64734f;
+}
+.theory-tag.turnaround,
+.theory-tag.quick {
+  background: #f7eade;
+  border-color: #ecd4bf;
+  color: #a06440;
+}
+.theory-tag.borrowed,
+.theory-tag.chromatic,
+.theory-tag.tritone {
+  background: #eee8f1;
+  border-color: #dfd4e5;
+  color: #826d8b;
+}
+.related-theory {
+  padding: 20px 27px 22px;
+  border-top: 1px solid var(--border);
+  background: #fcfbf6;
+}
+.theory-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.theory-heading h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #696350;
+}
+.theory-disclosure {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  min-height: 26px;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+}
+.theory-disclosure > svg:last-child {
+  transition: transform 0.15s;
+}
+.related-theory .theory-variation {
+  padding: 10px 12px;
+  border-left: 2px solid #d6c6ad;
+  background: #f2eee4;
+  border-radius: 0 5px 5px 0;
+}
+.theory-variation strong {
+  color: #77684f;
+  font-weight: 600;
+}
+.theory-heading a {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #9a866c;
+  font-size: 12px;
+}
+.related-theory p {
+  font-size: 14px;
+  line-height: 1.75;
+  color: #817867;
+  margin: 12px 0;
+}
+.related-theory .theory-listen {
+  color: #776f5e;
+}
+.theory-listen strong {
+  font-weight: 600;
+}
+.theory-notes {
+  display: grid;
+  gap: 10px;
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+}
+.theory-notes li {
+  display: grid;
+  grid-template-columns: 145px minmax(0, 1fr);
+  gap: 12px;
+  font-size: 13px;
+  line-height: 1.65;
+  color: #897e69;
+}
+.theory-notes strong {
+  font-weight: 600;
+  color: #746954;
+}
+.theory-location {
+  color: #aa896b;
+  font-size: 12px;
+}
+.related-theory .theory-context {
+  font-size: 12px;
+  color: #a39680;
+}
+.theory-glossary {
+  margin-top: 16px;
+  color: #8c806b;
+  font-size: 12px;
+}
+.theory-glossary summary {
+  cursor: pointer;
+  width: fit-content;
+}
+.theory-glossary dl {
+  display: grid;
+  gap: 10px;
+  margin: 14px 0 0;
+}
+.theory-glossary dt {
+  font-weight: 600;
+}
+.theory-glossary dd {
+  margin: 3px 0 0;
+  line-height: 1.6;
 }
 
 /* Tempo, rhythm, and sound settings. */
@@ -846,7 +993,8 @@ main {
   flex: 1;
 }
 .paired-fields select,
-.advanced-settings select {
+.advanced-settings select,
+.metronome-pattern select {
   width: 100%;
   padding: 9px;
   border: 1px solid #e7e0d4;
@@ -940,6 +1088,21 @@ main {
 }
 .advanced-settings select {
   max-width: 200px;
+}
+
+.metronome-pattern {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 16px;
+  font-size: 13px;
+  color: #ada18f;
+}
+.metronome-hint {
+  font-size: 12px;
+  line-height: 1.6;
+  color: #a0927b;
+  margin: 8px 0 0;
 }
 
 /* Footer, notifications, and help dialog. */
@@ -1086,7 +1249,7 @@ footer > span:last-child {
   }
 }
 @media (max-width: 900px) {
-  .header-note {
+  .header-support {
     display: none;
   }
 }
@@ -1134,9 +1297,7 @@ footer > span:last-child {
   nav a:nth-child(2) {
     display: none;
   }
-  .loop-status {
-    display: none;
-  }
+
   footer {
     flex-wrap: wrap;
     margin-top: 28px;
@@ -1148,6 +1309,21 @@ footer > span:last-child {
   }
 }
 @media (max-width: 550px) {
+  .related-theory {
+    padding: 18px 16px 20px;
+  }
+  .theory-tags {
+    margin-top: 8px;
+  }
+  .theory-tag {
+    font-size: 10px;
+    padding: 3px 4px;
+  }
+  .theory-notes li {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+
   main {
     padding-top: 20px;
   }
@@ -1231,11 +1407,7 @@ footer > span:last-child {
   .practice-options {
     padding-inline: 16px;
   }
-  .practice-options-row {
-    display: grid;
-    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
-    gap: 12px;
-  }
+
   .controls-main {
     grid-template-columns: 1fr;
     padding: 20px 18px 17px;

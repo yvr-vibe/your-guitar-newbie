@@ -7,11 +7,12 @@ A static React + TypeScript guitar practice website, built for GitHub Pages.
 - 100 curated exercises: 20 each for pop, rock, blues, jazz, and neo-soul.
 - Key transposition, playable guitar diagrams, full or simplified voicings.
 - 40–240 BPM, tap tempo, 3/4 or 4/4, shared chord-duration controls and a chord-relative beat counter.
-- Web Audio scheduled metronome, eighth-note subdivision, swing, synthesized chord accompaniment, and count-in.
+- Web Audio scheduled metronome, selectable beat emphasis (including 2 & 4 backbeat and backbeat-only), eighth-note subdivision, swing, synthesized chord accompaniment, and count-in. Blues defaults to 2 & 4 emphasis through the genre-default setting.
 - Filtered random selector with repeat avoidance; adaptation challenges switch at loop boundaries with a one-bar preview and optional random keys.
 - Genre tabs plus cross-genre Favorites, ordered Beginner → Intermediate → Advanced; favorites and settings saved locally.
-- Distinct-chord exercises shown in an expanding grid of up to four cards per row.
+- Compact distinct-chord previews with full practice sequences shown in grids of up to four cards per row.
 - Source and song-reference metadata retained in the catalog for editorial review.
+- Collapsible Related theory notes for every progression, with arrangement-specific card labels, explanations of the Variation label, and a saved Theory labels toggle.
 - Responsive interface, keyboard playback, shareable progression hash URLs.
 
 ## Local development
@@ -44,7 +45,7 @@ The workflow derives the base path from the repository name. For a user-site rep
 
 ## Content conventions
 
-The catalog includes common chord families and intentional practice variations; it is **not a statistically ranked top 20**. `variation` entries are labeled as practice variations. The current UI focuses on distinct-chord exercises; the original forms and song-reference metadata remain in the catalog. Song notes explain extracts, alternate durations, and substitutions. References are educational analyses, not licensed song transcriptions, recordings, or lyrics.
+The catalog includes common chord families and intentional practice variations; it is **not a statistically ranked top 20**. `variation` entries are labeled as practice variations. Library previews and player headings list each distinct chord once; the player cards and audio preserve the full catalog sequence, including repeated bars. Song-reference metadata remains in the catalog. Song notes explain extracts, alternate durations, and substitutions. References are educational analyses, not licensed song transcriptions, recordings, or lyrics.
 
 Roman numerals use a major-scale reference grid in every key: `i bVI bIII bVII` in A is Am–F–C–G. Lowercase numerals denote minor quality; explicit suffixes preserve extensions. Examples are transposed for practice rather than necessarily displayed in the recording's key.
 
@@ -53,9 +54,11 @@ Sources and editorial limitations are documented in [CONTENT.md](CONTENT.md). So
 - `src/App.tsx`: practice state, playback coordination, and player display.
 - `src/components/`: library, player options, practice controls, fretboard, help dialog, and the shared Toggle.
 - `src/settings.ts`: saved settings and validation.
-- `src/practice.ts`: distinct-chord exercises, beat counting, and difficulty ordering.
+- `src/practice.ts`: compact chord previews, beat counting, and difficulty ordering.
+- `src/theory.ts`: original explanations, explicit card annotations, glossary definitions, and reading links.
 - `src/catalog.ts`: original progression forms and editorial metadata.
-- `src/audio.ts` and `src/music.ts`: audio scheduling, harmony, and guitar shapes.
+- `src/audio.ts` and `src/metronome.ts`: audio scheduling and meter-aware click patterns.
+- `src/music.ts`: harmony and guitar shapes.
 - `src/styles.css`: shared design tokens, component styles, then responsive rules. Switch dimensions and option typography are defined once.
 
 Run `pnpm format` to format the source and tests. Before publishing, run formatting checks, tests, and the production build. Keep updates local until the user explicitly requests a GitHub push.

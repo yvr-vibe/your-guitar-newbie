@@ -1,7 +1,7 @@
 import type { Progression } from './catalog';
 
-// A chord-change exercise visits each Roman-numeral chord once, in first-seen order.
-// Retain the first occurrence's duration rather than accumulating a song's repeated bars.
+// Compact library and heading previews list each chord once, in first-seen order.
+// Playback and chord cards use the original progression, including every repeated bar.
 export function distinctProgression(progression: Progression): Progression {
   const seen = new Set<string>();
   const indices = progression.roman.flatMap((roman, index) => {

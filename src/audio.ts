@@ -1,10 +1,12 @@
 import { chordFor, chordIndexAt, voicingNotes } from './music';
 import type { Progression } from './catalog';
+import { metronomeClick, resolveClickPattern, type ClickPattern } from './metronome';
 export type PlaybackConfig = {
   progression: Progression;
   key: string;
   durations: number[];
   bpm: number;
+  clickPattern: ClickPattern;
   meter: number;
   subdivision: boolean;
   swing: boolean;
@@ -109,6 +111,7 @@ export class PracticeAudio {
       const config = {
         ...cursor.config,
         bpm: live.bpm,
+        clickPattern: live.clickPattern,
         click: live.click,
         accompaniment: live.accompaniment,
         volume: live.volume,
@@ -141,19 +144,30 @@ export class PracticeAudio {
         time: this.nextTime,
       };
       this.queue.push({ step, cursor: { ...cursor } });
-      const barStart = beat % config.meter === 0;
       const wholeBeat = Number.isInteger(beat);
       const unit =
         cursor.count !== null ? 1 : config.durations.some((d) => !Number.isInteger(d)) ? 0.5 : 1;
-      if ((config.click || cursor.count !== null) && wholeBeat)
-        this.tone(
-          barStart ? 1200 : 800,
-          this.nextTime,
-          0.035,
-          config.volume * (barStart ? 0.3 : 0.18),
-          'sine',
-        );
-      if (config.click && config.subdivision && wholeBeat)
+      const pattern = resolveClickPattern(
+        config.clickPattern,
+        config.meter,
+        config.progression.genre,
+      );
+      const pulse = metronomeClick(
+        config.clickPattern,
+        config.meter,
+        config.progression.genre,
+        beat,
+        cursor.count !== null,
+      );
+      if ((config.click || cursor.count !== null) && wholeBeat && pulse) {
+        this.tone(pulse.frequency, this.nextTime, 0.035, config.volume * pulse.level, 'sine');
+      }
+      if (
+        config.click &&
+        config.subdivision &&
+        wholeBeat &&
+        (cursor.count !== null || pattern !== 'backbeat-only')
+      ) {
         this.tone(
           580,
           this.nextTime + seconds * (config.swing ? 2 / 3 : 1 / 2),
@@ -161,6 +175,7 @@ export class PracticeAudio {
           config.volume * 0.1,
           'sine',
         );
+      }
       if (config.accompaniment && cursor.count === null) {
         const previous =
           cursor.beat === 0 ? -1 : chordIndexAt(config.durations, cursor.beat - unit);

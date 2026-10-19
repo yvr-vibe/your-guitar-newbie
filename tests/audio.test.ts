@@ -8,6 +8,7 @@ test('audio transport schedules count-in, subdivisions, seamless loop changes, a
   let nextId = 1;
   let oscillatorStarts: number[] = [];
   let stopped = 0;
+  const frequencies: number[] = [];
   const timers = new Map<number, () => void>();
   const frames = new Map<number, FrameRequestCallback>();
   const parameter = {
@@ -24,13 +25,15 @@ test('audio transport schedules count-in, subdivisions, seamless loop changes, a
     async resume() {}
     async close() {}
     createOscillator() {
+      const frequency = { ...parameter };
       return {
         type: 'sine',
-        frequency: { ...parameter },
+        frequency,
         connect() {},
         disconnect() {},
         start(t: number) {
           oscillatorStarts.push(t);
+          frequencies.push(frequency.value);
         },
         stop() {
           stopped++;
@@ -81,6 +84,7 @@ test('audio transport schedules count-in, subdivisions, seamless loop changes, a
     key: 'C',
     durations: [1, 1, 1, 1],
     bpm: 120,
+    clickPattern: 'first',
     meter: 4,
     subdivision: true,
     swing: false,
@@ -154,6 +158,57 @@ test('audio transport schedules count-in, subdivisions, seamless loop changes, a
     assert.equal(halfBars[3].chord, 1, 'chord changes exactly on the half bar');
     assert.equal(halfBars[6].beat, 3, 'next bar in 3/4');
     assert.equal(halfBars[6].chord, 2, 'second half-bar boundary');
+    engine.reset();
+    const blues = progressions.find((p) => p.id === 'blues-1')!;
+    config = {
+      ...config,
+      progression: blues,
+      bpm: 240,
+      meter: 4,
+      durations: blues.bars.map((bar) => bar * 4),
+    };
+    const bluesStart = steps.length;
+    await engine.play(false);
+    advance(11.95);
+    const bluesSteps = steps.slice(bluesStart);
+    assert.equal(bluesSteps.length, 48, 'full blues form plays all 48 beats');
+    assert.deepEqual(
+      bluesSteps.filter((s) => s.beat % 4 === 0).map((s) => s.chord),
+      Array.from({ length: 12 }, (_, i) => i),
+      'each repeated bar gets its own playback card',
+    );
+    assert.ok(
+      bluesSteps.every((s) => s.id === blues.id && s.loop === 0),
+      'do not switch progressions before all twelve bars finish',
+    );
+    engine.reset();
+    frequencies.length = 0;
+    config = { ...config, bpm: 120, subdivision: false, clickPattern: 'two-four' };
+    await engine.play(false);
+    advance(1.9);
+    assert.deepEqual(
+      frequencies,
+      [800, 1200, 800, 1200],
+      'backbeat accents reach the scheduled oscillators',
+    );
+    frequencies.length = 0;
+    config = { ...config, clickPattern: 'one-three' };
+    advance(1.9);
+    assert.deepEqual(
+      frequencies,
+      [1200, 800, 1200, 800],
+      'beat emphasis changes while playback continues',
+    );
+    engine.reset();
+    frequencies.length = 0;
+    config = { ...config, subdivision: true, clickPattern: 'backbeat-only' };
+    await engine.play(false);
+    advance(1.9);
+    assert.deepEqual(
+      frequencies,
+      [1200, 1200],
+      'backbeat-only suppresses beats 1/3 and subdivision clicks',
+    );
   } finally {
     await engine.dispose();
     Object.assign(globalThis, previous);

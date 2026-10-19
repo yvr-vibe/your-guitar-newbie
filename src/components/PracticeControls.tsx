@@ -1,9 +1,12 @@
 import { ChevronDown, Headphones, Music2, Settings2, Volume2, VolumeX } from 'lucide-react';
+import type { Genre } from '../catalog';
+import { requiresFourBeatMeter, resolveClickPattern, type ClickPattern } from '../metronome';
 import type { Settings, SettingsChange } from '../settings';
 import Toggle from './Toggle';
 
 type Props = {
   settings: Settings;
+  genre: Genre;
   onSettingChange: SettingsChange;
   bpmDraft: string;
   onBpmDraftChange: (draft: string) => void;
@@ -15,6 +18,7 @@ type Props = {
 
 export default function PracticeControls({
   settings,
+  genre,
   onSettingChange,
   bpmDraft,
   onBpmDraftChange,
@@ -85,6 +89,42 @@ export default function PracticeControls({
             <span>40</span>
             <span>240</span>
           </div>
+          <label className="metronome-pattern">
+            Beat emphasis
+            <select
+              aria-label="Metronome beat emphasis"
+              value={settings.clickPattern}
+              onChange={(event) =>
+                onSettingChange('clickPattern', event.target.value as ClickPattern)
+              }
+            >
+              <option value="auto">
+                Genre default (
+                {resolveClickPattern('auto', settings.meter, genre) === 'two-four'
+                  ? '2 & 4'
+                  : 'beat 1'}
+                )
+              </option>
+              <option value="even">All beats evenly</option>
+              <option value="first">Accent beat 1</option>
+              <option value="one-three" disabled={settings.meter !== 4}>
+                Accent 1 & 3{settings.meter !== 4 ? ' · 4/4 only' : ''}
+              </option>
+              <option value="two-four" disabled={settings.meter !== 4}>
+                Accent 2 & 4{settings.meter !== 4 ? ' · 4/4 only' : ''}
+              </option>
+              <option value="backbeat-only" disabled={settings.meter !== 4}>
+                Only 2 & 4{settings.meter !== 4 ? ' · 4/4 only' : ''}
+              </option>
+            </select>
+          </label>
+          <p className="metronome-hint">
+            {settings.clickPattern === 'backbeat-only'
+              ? 'Only beats 2 and 4 click; count-in still clicks every beat.'
+              : resolveClickPattern(settings.clickPattern, settings.meter, genre) === 'two-four'
+                ? 'Stronger clicks on 2 and 4; all four beats still count.'
+                : 'Emphasis follows the bar, independently of chord duration.'}
+          </p>
         </div>
         <div className="rhythm-control">
           <div className="control-title">
@@ -98,7 +138,10 @@ export default function PracticeControls({
                 aria-label="Time signature"
                 value={settings.meter}
                 onChange={(e) => {
-                  onSettingChange('meter', Number(e.target.value), true);
+                  const meter = Number(e.target.value);
+                  if (meter !== 4 && requiresFourBeatMeter(settings.clickPattern))
+                    onSettingChange('clickPattern', 'first');
+                  onSettingChange('meter', meter, true);
                 }}
               >
                 <option value="4">4 / 4</option>

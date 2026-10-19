@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { progressions } from '../src/catalog';
 import { distinctProgression, chordBeat, sortByDifficulty, DIFFICULTIES } from '../src/practice';
 
-test('distinct exercises preserve first-seen chords and their durations without mutating full forms', () => {
+test('compact previews preserve first-seen chords without mutating full playback forms', () => {
   const blues = progressions.find((p) => p.id === 'blues-1')!;
   assert.equal(blues.roman.length, 12);
   assert.deepEqual(distinctProgression(blues).roman, ['I7', 'IV7', 'V7']);

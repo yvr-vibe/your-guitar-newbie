@@ -16,6 +16,8 @@ import { chordFor, KEYS, ShuffleBag } from './music';
 import { distinctProgression, chordBeat, sortByDifficulty } from './practice';
 import { PracticeAudio, type PlaybackConfig, type Step } from './audio';
 
+import { THEORY_LESSONS, THEORY_CONCEPTS } from './theory';
+import RelatedTheory from './components/RelatedTheory';
 import { loadSaved, type Settings } from './settings';
 import PracticeControls from './components/PracticeControls';
 import Fretboard from './components/Fretboard';
@@ -36,7 +38,7 @@ function makeDurations(p: Progression, s: Settings) {
 }
 export default function App() {
   const [selectedId, setSelectedId] = useState(initialProgression.id);
-  const selected = distinctProgression(progressions.find((p) => p.id === selectedId)!);
+  const selected = progressions.find((p) => p.id === selectedId)!;
   const [settings, setSettings] = useState(initial.settings);
   const [bpmDraft, setBpmDraft] = useState(String(initial.settings.bpm));
   const [genre, setGenre] = useState<Genre | 'Favorites'>(initialProgression.genre);
@@ -67,6 +69,7 @@ export default function App() {
     () => pool.filter((p) => difficulty === 'All levels' || p.difficulty === difficulty),
     [pool, difficulty],
   );
+  const theory = THEORY_LESSONS[selected.id];
   const durations = makeDurations(selected, settings);
   const chords = selected.roman.map((r) => chordFor(r, settings.key, settings.simplified));
   const total = durations.reduce((a, b) => a + b, 0);
@@ -110,7 +113,7 @@ export default function App() {
           state.filtered.map((p) => p.id),
           config.progression.id,
         );
-        const p = distinctProgression(progressions.find((p) => p.id === id)!);
+        const p = progressions.find((p) => p.id === id)!;
         const key = state.settings.randomKey
           ? KEYS[Math.floor(Math.random() * KEYS.length)]
           : config.key;
@@ -295,9 +298,15 @@ export default function App() {
             About <ArrowUpRight size={13} />
           </button>
         </nav>
-        <span className="header-note">
-          <span /> A little practice, every day.
-        </span>
+        <a
+          className="header-support"
+          href="https://www.paypal.com/ncp/payment/JP6G8C7VKQZTG"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Support this website via PayPal (opens in a new tab)"
+        >
+          <span aria-hidden="true">☕</span> Support this website
+        </a>
       </header>
       <main>
         <div className="workspace" id="practice">
@@ -322,9 +331,7 @@ export default function App() {
                     <span className={`level-dot ${selected.difficulty.toLowerCase()}`} />
                     {selected.difficulty}
                   </span>
-                  {selected.variation && (
-                    <span className="variation-label">Practice variation</span>
-                  )}
+                  {selected.variation && <span className="variation-label">Variation</span>}
                   <button
                     className={`favorite-button ${favorites.includes(selectedId) ? 'saved' : ''}`}
                     aria-label={`${favorites.includes(selectedId) ? 'Unsave' : 'Save'} current progression`}
@@ -349,7 +356,12 @@ export default function App() {
                   </button>
                 </div>
                 <div className="progression-subtitle-row">
-                  <p>{selected.roman.join(' – ').replaceAll('b', '♭').replaceAll('#', '♯')}</p>
+                  <p>
+                    {distinctProgression(selected)
+                      .roman.join(' – ')
+                      .replaceAll('b', '♭')
+                      .replaceAll('#', '♯')}
+                  </p>
                   <div className="transport-actions">
                     <button
                       className="restart-button"
@@ -396,7 +408,6 @@ export default function App() {
                   </select>
                 </div>
                 <span className="loop-length">
-                  <RotateCcw size={14} />
                   {barCount} {barCount === 1 ? 'bar' : 'bars'} · {total} beats
                 </span>
               </div>
@@ -436,6 +447,22 @@ export default function App() {
                         {chord.roman.replaceAll('b', '♭').replaceAll('#', '♯')}
                       </span>
                       {settings.showDiagrams && <Fretboard chord={chord} />}
+                      {settings.showTheoryLabels && (
+                        <div className="theory-tags">
+                          {theory.focus
+                            .filter((focus) => focus.index === index)
+                            .map((focus) => (
+                              <span
+                                key={focus.concept}
+                                className={`theory-tag ${focus.concept}`}
+                                title={THEORY_CONCEPTS[focus.concept][1]}
+                                aria-describedby={`theory-${selected.id}-${focus.index}-${focus.concept}`}
+                              >
+                                {THEORY_CONCEPTS[focus.concept][0]}
+                              </span>
+                            ))}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -468,9 +495,16 @@ export default function App() {
                 challenge={challenge}
                 onChallengeChange={() => setChallenge((c) => !c)}
                 onSettingChange={(key, value) => update(key, value, key === 'simplified')}
-                loop={step && step.countIn === null ? step.loop + 1 : null}
               />
 
+              <RelatedTheory
+                progression={selected}
+                lesson={theory}
+                durations={durations}
+                meter={settings.meter}
+                simplified={settings.simplified}
+                rhythmChanged={settings.beats !== 'original'}
+              />
               {error && (
                 <div className="error-message" role="alert">
                   {error}
@@ -478,6 +512,7 @@ export default function App() {
               )}
             </section>
             <PracticeControls
+              genre={selected.genre}
               settings={settings}
               onSettingChange={update}
               bpmDraft={bpmDraft}

@@ -26,12 +26,12 @@ export default function AboutDialog({ onClose }: { onClose: () => void }) {
       </p>
       <h3>Using the player</h3>
       <p>
-        Exercises visit each distinct chord once in its first-seen order, rather than reproducing a
-        full song form. Pick a progression, choose your key, and press Play. The beat counter
-        follows the active chord’s duration. Enable Show chord diagrams to view guitar shapes. Read
-        diagrams from low E on the left to high E on the right. Open circles mean open strings; ×
-        means mute. A fret number marks a movable shape. Use a barre where neighboring strings share
-        a fret.
+        Library previews list each distinct chord once. The player displays and plays the full
+        progression, including repeated bars, in rows of up to four cards. Pick a progression,
+        choose your key, and press Play. The beat counter follows the active chord’s duration.
+        Enable Chord diagrams to view guitar shapes. Read diagrams from low E on the left to high E
+        on the right. Open circles mean open strings; × means mute. A fret number marks a movable
+        shape. Use a barre where neighboring strings share a fret.
       </p>
       <h3>The progression collection</h3>
       <p>

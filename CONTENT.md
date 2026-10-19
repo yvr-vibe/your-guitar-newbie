@@ -21,10 +21,18 @@ The 100 entries are a learning collection: common harmonic families plus intenti
 
 ## Limits and follow-up editorial work
 
-The catalog song metadata distinguishes a chord foundation or an extract from a related harmonic family. Song cards are currently hidden. The practice UI visits each distinct Roman-numeral chord once in first-seen order; it does not reproduce the original song form. Each distinct chord keeps its first occurrence’s default duration. Blues turnarounds and jazz chord colors differ between performances. Do not relabel related-listening references as exact matches without verifying a specific recording and section.
+The catalog song metadata distinguishes a chord foundation or an extract from a related harmonic family. Song cards are currently hidden. Library previews and player headings list each distinct Roman-numeral chord once in first-seen order. Player cards and audio retain the full catalog sequence and its durations, including repeated bars. Blues turnarounds and jazz chord colors differ between performances. Do not relabel related-listening references as exact matches without verifying a specific recording and section.
 
 Some exercises have one suitable reference rather than two or three. In particular, neo-soul variations use soul and jazz harmonic ancestors as related listening references. Exact popular neo-soul recording matches for every variation still require a recording-by-recording editorial audit. The UI and data do not claim those recordings use the exact exercise.
 
 No lyrics, melodies, commercial audio, or copied chord-chart images are bundled. Diagrams are rendered from the app's guitar-voicing definitions. Shell voicings intentionally omit some fifths and upper extensions; each sounded note belongs to the named chord.
 
 Source review: September 30, 2026. All practice tips and exercise names are original editorial text.
+
+## Related theory and card annotations
+
+`src/theory.ts` contains original explanations for each of the 100 exercises. Labels refer to explicit card positions in the full arrangement, not to guesses made from the exercise title. Bar/beat locations are calculated from the active durations; when the rhythm is changed, the UI distinguishes these locations from the default-form explanation. Simplified voicings can omit the extensions discussed in the notes.
+
+For example, the classic blues marks its final V7 as a turnaround, while the quick-change resolution marks IV7 in bar 2 and I7 in bar 11 without inventing a final V7. The extended jazz-blues turnaround uses half-bar positions rather than treating all fourteen cards as fourteen bars.
+
+Theory terminology was checked against the authors' educational chapters in Open Music Theory: [the blues progression](https://openmusictheory.github.io/popRockHarmony-blues.html), [ii–V–I](https://viva.pressbooks.pub/openmusictheory/chapter/ii-v-i/), [substitutions](https://viva.pressbooks.pub/openmusictheory/chapter/substitutions/), [modal mixture](https://viva.pressbooks.pub/openmusictheory/chapter/modal-mixture/), and [modal schemas](https://viva.pressbooks.pub/openmusictheory/chapter/modal-schemas/). Further-reading links supplement the app's original explanations; they do not imply that a source uses the app's descriptive exercise titles.

@@ -1,9 +1,11 @@
 import { progressions } from './catalog';
 import { KEYS } from './music';
+import { CLICK_PATTERNS, requiresFourBeatMeter, type ClickPattern } from './metronome';
 
 export type Settings = {
   key: string;
   bpm: number;
+  clickPattern: ClickPattern;
   meter: number;
   beats: string;
   subdivision: boolean;
@@ -14,12 +16,14 @@ export type Settings = {
   countIn: boolean;
   simplified: boolean;
   showDiagrams: boolean;
+  showTheoryLabels: boolean;
   loops: number;
   randomKey: boolean;
 };
 export const DEFAULT_SETTINGS: Settings = {
   key: 'C',
   bpm: 90,
+  clickPattern: 'auto',
   meter: 4,
   beats: 'original',
   subdivision: false,
@@ -30,6 +34,7 @@ export const DEFAULT_SETTINGS: Settings = {
   countIn: true,
   simplified: false,
   showDiagrams: false,
+  showTheoryLabels: true,
   loops: 2,
   randomKey: false,
 };
@@ -37,13 +42,18 @@ export function loadSaved(): { settings: Settings; favorites: string[]; selected
   try {
     const saved = JSON.parse(localStorage.getItem('fret-practice-v1') || '{}');
     const raw = { ...DEFAULT_SETTINGS, ...saved.settings };
+    const meter = [3, 4].includes(raw.meter) ? raw.meter : DEFAULT_SETTINGS.meter;
+    const clickPattern: ClickPattern = CLICK_PATTERNS.includes(raw.clickPattern)
+      ? raw.clickPattern
+      : DEFAULT_SETTINGS.clickPattern;
     const settings: Settings = {
       ...DEFAULT_SETTINGS,
       key: KEYS.includes(raw.key) ? raw.key : DEFAULT_SETTINGS.key,
       bpm: Number.isFinite(raw.bpm)
         ? Math.max(40, Math.min(240, Math.round(raw.bpm)))
         : DEFAULT_SETTINGS.bpm,
-      meter: [3, 4].includes(raw.meter) ? raw.meter : 4,
+      clickPattern: meter !== 4 && requiresFourBeatMeter(clickPattern) ? 'first' : clickPattern,
+      meter,
       beats: ['original', '1', '2', '4', '6', '8'].includes(raw.beats) ? raw.beats : 'original',
       loops: [1, 2, 4, 8].includes(raw.loops) ? raw.loops : 2,
       volume: Number.isFinite(raw.volume)
@@ -58,6 +68,7 @@ export function loadSaved(): { settings: Settings; favorites: string[]; selected
           'countIn',
           'simplified',
           'showDiagrams',
+          'showTheoryLabels',
           'randomKey',
         ].map((k) => [
           k,
