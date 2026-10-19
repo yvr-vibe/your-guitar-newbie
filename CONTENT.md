@@ -21,7 +21,7 @@ The 100 entries are a learning collection: common harmonic families plus intenti
 
 ## Limits and follow-up editorial work
 
-Song cards distinguish a chord foundation or an extract from a related harmonic family. In variation entries the page explicitly explains that exact changes can differ. Blues turnarounds and jazz chord colors differ between performances. Do not relabel related-listening references as exact matches without verifying a specific recording and section.
+The catalog song metadata distinguishes a chord foundation or an extract from a related harmonic family. Song cards are currently hidden. The practice UI visits each distinct Roman-numeral chord once in first-seen order; it does not reproduce the original song form. Each distinct chord keeps its first occurrence’s default duration. Blues turnarounds and jazz chord colors differ between performances. Do not relabel related-listening references as exact matches without verifying a specific recording and section.
 
 Some exercises have one suitable reference rather than two or three. In particular, neo-soul variations use soul and jazz harmonic ancestors as related listening references. Exact popular neo-soul recording matches for every variation still require a recording-by-recording editorial audit. The UI and data do not claim those recordings use the exact exercise.
 

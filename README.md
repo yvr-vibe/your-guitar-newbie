@@ -6,11 +6,12 @@ A static React + TypeScript guitar practice website, built for GitHub Pages.
 
 - 100 curated exercises: 20 each for pop, rock, blues, jazz, and neo-soul.
 - Key transposition, playable guitar diagrams, full or simplified voicings.
-- 40–240 BPM, tap tempo, 3/4 or 4/4, editable duration for each chord.
+- 40–240 BPM, tap tempo, 3/4 or 4/4, shared chord-duration controls and a chord-relative beat counter.
 - Web Audio scheduled metronome, eighth-note subdivision, swing, synthesized chord accompaniment, and count-in.
-- Filtered random selector with repeat avoidance; adaptation challenges switch at loop boundaries with optional previews and random keys.
-- Search by title, chord pattern, song, or artist; favorites and settings saved locally.
-- Song and educational references with explicit notes about simplified or related harmony.
+- Filtered random selector with repeat avoidance; adaptation challenges switch at loop boundaries with a one-bar preview and optional random keys.
+- Genre tabs plus cross-genre Favorites, ordered Beginner → Intermediate → Advanced; favorites and settings saved locally.
+- Distinct-chord exercises shown in an expanding grid of up to four cards per row.
+- Source and song-reference metadata retained in the catalog for editorial review.
 - Responsive interface, keyboard playback, shareable progression hash URLs.
 
 ## Local development
@@ -24,6 +25,7 @@ pnpm dev
 ```
 
 ```sh
+pnpm format:check
 pnpm test
 pnpm build
 pnpm preview
@@ -42,10 +44,20 @@ The workflow derives the base path from the repository name. For a user-site rep
 
 ## Content conventions
 
-The catalog includes common chord families and intentional practice variations; it is **not a statistically ranked top 20**. `variation` entries visibly label related listening examples instead of claiming the recording uses an exact reharmonization. Song notes explain extracts, alternate durations, and substitutions. References are educational analyses, not licensed song transcriptions, recordings, or lyrics.
+The catalog includes common chord families and intentional practice variations; it is **not a statistically ranked top 20**. `variation` entries are labeled as practice variations. The current UI focuses on distinct-chord exercises; the original forms and song-reference metadata remain in the catalog. Song notes explain extracts, alternate durations, and substitutions. References are educational analyses, not licensed song transcriptions, recordings, or lyrics.
 
 Roman numerals use a major-scale reference grid in every key: `i bVI bIII bVII` in A is Am–F–C–G. Lowercase numerals denote minor quality; explicit suffixes preserve extensions. Examples are transposed for practice rather than necessarily displayed in the recording's key.
 
-Sources and editorial limitations are documented in [CONTENT.md](CONTENT.md). The catalog lives in `src/catalog.ts`; audio scheduling in `src/audio.ts`; harmony and guitar shapes in `src/music.ts`.
+Sources and editorial limitations are documented in [CONTENT.md](CONTENT.md). Source responsibilities:
+
+- `src/App.tsx`: practice state, playback coordination, and player display.
+- `src/components/`: library, player options, practice controls, fretboard, help dialog, and the shared Toggle.
+- `src/settings.ts`: saved settings and validation.
+- `src/practice.ts`: distinct-chord exercises, beat counting, and difficulty ordering.
+- `src/catalog.ts`: original progression forms and editorial metadata.
+- `src/audio.ts` and `src/music.ts`: audio scheduling, harmony, and guitar shapes.
+- `src/styles.css`: shared design tokens, component styles, then responsive rules. Switch dimensions and option typography are defined once.
+
+Run `pnpm format` to format the source and tests. Before publishing, run formatting checks, tests, and the production build. Keep updates local until the user explicitly requests a GitHub push.
 
 Fonts load from Google Fonts with local sans-serif fallbacks. All sounds are generated locally after the user starts playback. Background tabs automatically pause practice.
