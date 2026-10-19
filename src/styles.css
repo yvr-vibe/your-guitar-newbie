@@ -648,6 +648,9 @@ main {
 .chord-card.current h3 {
   color: #b65331;
 }
+.chord-name-text {
+  display: inline-block;
+}
 .chord-roman {
   display: block;
   font-size: 20px;
@@ -1396,10 +1399,6 @@ footer > span:last-child {
   .chord-card h3 {
     font-size: clamp(16px, 4.7vw, 26px);
     letter-spacing: -0.7px;
-  }
-  .chord-card h3.extended-name {
-    font-size: clamp(11px, 3.4vw, 19px);
-    letter-spacing: -0.5px;
   }
   .chord-roman {
     font-size: clamp(16px, 5vw, 20px);

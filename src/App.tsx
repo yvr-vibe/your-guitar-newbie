@@ -21,6 +21,7 @@ import RelatedTheory from './components/RelatedTheory';
 import { loadSaved, type Settings } from './settings';
 import PracticeControls from './components/PracticeControls';
 import Fretboard from './components/Fretboard';
+import ChordName from './components/ChordName';
 import ProgressionLibrary from './components/ProgressionLibrary';
 import PracticeOptions from './components/PracticeOptions';
 import AboutDialog from './components/AboutDialog';
@@ -393,7 +394,6 @@ export default function App() {
               <div className="player-toolbar">
                 <div className="toolbar-select">
                   <Music2 size={15} />
-                  <span>Key</span>
                   <select
                     aria-label="Practice key"
                     value={settings.key}
@@ -440,9 +440,7 @@ export default function App() {
                       key={`${selectedId}-${index}`}
                       className={`chord-card ${index === active ? 'current' : ''}`}
                     >
-                      <h3 className={chord.name.length > 4 ? 'extended-name' : undefined}>
-                        {chord.name.replaceAll('b', '♭').replaceAll('#', '♯')}
-                      </h3>
+                      <ChordName name={chord.name} />
                       <span className="chord-roman">
                         {chord.roman.replaceAll('b', '♭').replaceAll('#', '♯')}
                       </span>
