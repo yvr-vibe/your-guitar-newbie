@@ -66,3 +66,5 @@ Run `pnpm format` to format the source and tests. Before publishing, run formatt
 Fonts load from Google Fonts with local sans-serif fallbacks. All sounds are generated locally after the user starts playback. Background tabs automatically pause practice.
 
 Triad mode uses three distinct chord tones on the top three strings. Shell mode keeps a bass root with the third and seventh (or sixth); plain triads remain triads. Suspended and power chords retain their basic shapes with a Basic caption. The Chord diagrams settings explain omissions and fallback behavior. Chord symbols always retain the full harmony. Legacy simplified-mode preferences migrate to Triad.
+
+Shell mode has a saved Include extensions toggle (off by default). When enabled, the diagram and accompaniment keep the root, third, and seventh while adding the highest named extension: 9th, 11th, 13th, or altered 9th. Lower extensions and fifths may be omitted. Shapes stay within a four-fret window; if none is available, the compact shell remains and its accessible description explains the omission. Card captions remain Shell.

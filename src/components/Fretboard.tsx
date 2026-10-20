@@ -1,7 +1,15 @@
 import { voicingFor, type Chord, type VoicingMode } from '../music';
 
-export default function Fretboard({ chord, mode }: { chord: Chord; mode: VoicingMode }) {
-  const shape = voicingFor(chord, mode);
+export default function Fretboard({
+  chord,
+  mode,
+  includeExtensions,
+}: {
+  chord: Chord;
+  mode: VoicingMode;
+  includeExtensions: boolean;
+}) {
+  const shape = voicingFor(chord, mode, includeExtensions);
   return (
     <>
       <svg

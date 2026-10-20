@@ -196,6 +196,20 @@ export default function PracticeControls({
               </button>
             ))}
           </div>
+          {settings.voicingMode === 'shell' && (
+            <div className="extension-option">
+              <Toggle
+                checked={settings.includeExtensions}
+                onChange={() => onSettingChange('includeExtensions', !settings.includeExtensions)}
+              >
+                Include extensions
+              </Toggle>
+              <p className="metronome-hint">
+                Adds the highest named extension (9, 11, or 13, including altered 9ths) to the shell
+                where playable. Other chord tones may be omitted.
+              </p>
+            </div>
+          )}
           <p className="metronome-hint">
             {settings.voicingMode === 'basic'
               ? 'Familiar open or movable shapes.'

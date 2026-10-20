@@ -106,9 +106,13 @@ const OPEN: Record<string, (number | null)[]> = {
   Dsus4: [null, null, 0, 2, 3, 3],
 };
 const TUNING = [40, 45, 50, 55, 59, 64];
-export function voicingFor(chord: Chord, mode: VoicingMode = 'basic'): Voicing {
+export function voicingFor(
+  chord: Chord,
+  mode: VoicingMode = 'basic',
+  includeExtensions = false,
+): Voicing {
   if (mode !== 'basic') {
-    const compact = compactVoicing(chord, mode);
+    const compact = compactVoicing(chord, mode, includeExtensions);
     if (compact) return compact;
     return { ...voicingFor(chord), description: 'Basic fallback · suspended/power chord' };
   }
@@ -153,8 +157,14 @@ export function voicingFor(chord: Chord, mode: VoicingMode = 'basic'): Voicing {
     label: open ? 'Open position' : 'Movable shape',
   };
 }
-export function voicingNotes(chord: Chord, mode: VoicingMode = 'basic'): number[] {
-  return voicingFor(chord, mode).frets.flatMap((f, i) => (f === null ? [] : [TUNING[i] + f]));
+export function voicingNotes(
+  chord: Chord,
+  mode: VoicingMode = 'basic',
+  includeExtensions = false,
+): number[] {
+  return voicingFor(chord, mode, includeExtensions).frets.flatMap((f, i) =>
+    f === null ? [] : [TUNING[i] + f],
+  );
 }
 export function chordIndexAt(durations: number[], beat: number): number {
   let cursor = 0;

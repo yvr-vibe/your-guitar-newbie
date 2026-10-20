@@ -14,6 +14,7 @@ export type PlaybackConfig = {
   accompaniment: boolean;
   volume: number;
   voicingMode: VoicingMode;
+  includeExtensions: boolean;
 };
 export type Step = {
   id: string;
@@ -118,6 +119,7 @@ export class PracticeAudio {
         subdivision: live.subdivision,
         swing: live.swing,
         voicingMode: live.voicingMode,
+        includeExtensions: live.includeExtensions,
       };
       cursor.config = config;
       const total = config.durations.reduce((a, b) => a + b, 0);
@@ -182,14 +184,15 @@ export class PracticeAudio {
         if (previous !== chord) {
           const played = chordFor(config.progression.roman[chord], config.key);
           const duration = Math.min(config.durations[chord] * seconds * 0.9, 4);
-          voicingNotes(played, config.voicingMode).forEach((midi, index) =>
-            this.tone(
-              440 * 2 ** ((midi - 69) / 12),
-              this.nextTime + index * 0.009,
-              duration,
-              config.volume * 0.045,
-              'triangle',
-            ),
+          voicingNotes(played, config.voicingMode, config.includeExtensions).forEach(
+            (midi, index) =>
+              this.tone(
+                440 * 2 ** ((midi - 69) / 12),
+                this.nextTime + index * 0.009,
+                duration,
+                config.volume * 0.045,
+                'triangle',
+              ),
           );
         }
       }

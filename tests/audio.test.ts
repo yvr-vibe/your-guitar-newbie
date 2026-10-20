@@ -93,6 +93,7 @@ test('audio transport schedules count-in, subdivisions, seamless loop changes, a
     accompaniment: false,
     volume: 0.5,
     voicingMode: 'basic',
+    includeExtensions: false,
   };
   const steps: Step[] = [];
   const second = progressions[2];
@@ -230,6 +231,23 @@ test('audio transport schedules count-in, subdivisions, seamless loop changes, a
     config = { ...config, voicingMode: 'shell' };
     advance(1.9);
     assert.deepEqual(frequencies, expected('shell'), 'the next card uses a live shell-mode change');
+    engine.reset();
+    frequencies.length = 0;
+    const extended = progressions.find((p) => p.id === 'neosoul-18')!;
+    config = { ...config, progression: extended, durations: [1, 1], includeExtensions: false };
+    await engine.play(false);
+    advance(0.2);
+    assert.equal(frequencies.length, 3, 'shell starts with three notes');
+    frequencies.length = 0;
+    config = { ...config, includeExtensions: true };
+    advance(0.45);
+    assert.deepEqual(
+      frequencies,
+      voicingNotes(chordFor(extended.roman[1], config.key), 'shell', true).map(
+        (n) => 440 * 2 ** ((n - 69) / 12),
+      ),
+      'extension toggle changes the next sounded chord to match its diagram',
+    );
   } finally {
     await engine.dispose();
     Object.assign(globalThis, previous);

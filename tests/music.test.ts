@@ -180,3 +180,42 @@ test('compact voicings retain chord symbols and explain reductions and special f
     [5, 7, 11],
   );
 });
+
+test('extended shells retain the shell and add the highest named color in every key', () => {
+  for (const [quality, intervals] of Object.entries(INTERVALS))
+    for (let root = 0; root < 12; root++) {
+      const chord = { name: `${root}${quality}`, root, quality, intervals, roman: 'I' };
+      const shape = voicingFor(chord, 'shell', true);
+      const notes = voicingNotes(chord, 'shell', true);
+      const context = `${quality} root ${root}`;
+      const extension = Math.max(0, ...intervals.filter((n) => n >= 12));
+      if (!extension) {
+        assert.deepEqual(shape.frets, voicingFor(chord, 'shell').frets, context);
+        continue;
+      }
+      assert.equal(notes.length, 4, context);
+      const third = intervals.includes(3) ? 3 : 4;
+      const seventh = intervals.includes(10) ? 10 : 11;
+      const expected = [0, third, seventh, extension % 12].map((n) => mod(root + n));
+      assert.deepEqual(new Set(notes.map((n) => mod(n))), new Set(expected), context);
+      assert.equal(mod(Math.min(...notes)), root, context);
+      assert.ok(
+        notes.every((n) => intervals.some((i) => mod(root + i) === mod(n))),
+        context,
+      );
+      const pressed = shape.frets.filter((f): f is number => f !== null && f > 0);
+      assert.ok(Math.max(...pressed) - Math.min(...pressed) <= 3, context);
+      assert.ok(
+        pressed.every((f) => f >= shape.start && f < shape.start + 4),
+        context,
+      );
+      assert.ok(
+        shape.frets.every((f) => f === null || (f >= 0 && f <= 17)),
+        context,
+      );
+      assert.deepEqual(voicingFor(chord, 'triad', true), voicingFor(chord, 'triad'), context);
+      assert.deepEqual(voicingFor(chord, 'basic', true), voicingFor(chord), context);
+    }
+  assert.match(voicingFor(chordFor('i11', 'A'), 'shell', true).description!, /11/);
+  assert.match(voicingFor(chordFor('V13', 'C'), 'shell', true).description!, /13/);
+});

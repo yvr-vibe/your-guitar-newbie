@@ -925,6 +925,9 @@ main {
   background: #f2eee5;
   border-radius: 6px;
 }
+.extension-option {
+  margin-top: 14px;
+}
 .voicing-buttons button {
   flex: 1;
   min-width: 0;

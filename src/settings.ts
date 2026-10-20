@@ -15,6 +15,7 @@ export type Settings = {
   volume: number;
   countIn: boolean;
   voicingMode: VoicingMode;
+  includeExtensions: boolean;
   showDiagrams: boolean;
   showTheoryLabels: boolean;
   loops: number;
@@ -33,6 +34,7 @@ export const DEFAULT_SETTINGS: Settings = {
   volume: 0.65,
   countIn: true,
   voicingMode: 'basic',
+  includeExtensions: false,
   showDiagrams: false,
   showTheoryLabels: true,
   loops: 2,
@@ -72,6 +74,7 @@ export function loadSaved(): { settings: Settings; favorites: string[]; selected
           'accompaniment',
           'countIn',
           'showDiagrams',
+          'includeExtensions',
           'showTheoryLabels',
           'randomKey',
         ].map((k) => [

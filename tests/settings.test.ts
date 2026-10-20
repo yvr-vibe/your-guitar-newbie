@@ -28,6 +28,10 @@ test('saved settings validate beat accents and migrate voicing preferences', () 
     assert.equal(loadSaved().settings.voicingMode, 'triad');
     saved = JSON.stringify({ settings: { voicingMode: 'invalid' } });
     assert.equal(loadSaved().settings.voicingMode, 'basic');
+    saved = JSON.stringify({ settings: { includeExtensions: true } });
+    assert.equal(loadSaved().settings.includeExtensions, true);
+    saved = JSON.stringify({ settings: { includeExtensions: 'yes' } });
+    assert.equal(loadSaved().settings.includeExtensions, false);
     saved = '{invalid';
     assert.deepEqual(loadSaved().settings, DEFAULT_SETTINGS);
   } finally {

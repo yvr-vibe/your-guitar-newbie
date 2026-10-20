@@ -445,7 +445,11 @@ export default function App() {
                         {chord.roman.replaceAll('b', '♭').replaceAll('#', '♯')}
                       </span>
                       {settings.showDiagrams && (
-                        <Fretboard chord={chord} mode={settings.voicingMode} />
+                        <Fretboard
+                          chord={chord}
+                          mode={settings.voicingMode}
+                          includeExtensions={settings.includeExtensions}
+                        />
                       )}
                       {settings.showTheoryLabels && (
                         <div className="theory-tags">
